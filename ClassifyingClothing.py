@@ -113,7 +113,7 @@ def plot_value_array(i, predictions_array, true_label):
 
 
 def plot_item(i: int):
-    """display both plots for item i"""
+    """Display both plots for item i"""
     plt.figure(figsize=(6, 3))
     plt.subplot(1, 2, 1)
     plot_image(i, predictions[i], test_labels, test_images)
@@ -123,4 +123,45 @@ def plot_item(i: int):
 
 
 # example, plot the first item
-plot_item(0)
+# plot_item(0)
+
+def plot_many(num_rows: int, num_cols: int):
+    """Plot the first (num_rows * num_col) number of images, their predicted labels, and the true labels.
+    Color the correct predictions in blue and incorrect predictions in red.
+    """
+    num_images = num_rows * num_cols
+    plt.figure(figsize=(2 * 2 * num_cols, 2 * num_rows))
+    for i in range(num_images):
+        plt.subplot(num_rows, 2 * num_cols, 2 * i + 1)
+        plot_image(i, predictions[i], test_labels, test_images)
+        plt.subplot(num_rows, 2 * num_cols, 2 * i + 2)
+        plot_value_array(i, predictions[i], test_labels)
+    plt.tight_layout()
+    plt.show()
+
+
+# example, plot the first 15 item
+# plot_many(5, 3)
+
+# Finally, let's actually use the trained model!
+# Pick an image from the test dataset
+img = test_images[1]
+
+print(img.shape)
+
+# since keras models are optimized on batches, we create a batch with this one item
+img = (np.expand_dims(img, 0))
+print(img.shape)
+
+# now predict the correct label for this image:
+predictions_single = probability_model.predict(img)
+print(predictions_single)
+
+# plot the prediction
+plot_value_array(1, predictions_single[0], test_labels)
+_ = plt.xticks(range(10), class_names, rotation=45)
+plt.show()
+
+# get the actual prediction
+prediction_num = np.argmax(predictions_single[0])
+print('The prediction is: ', prediction_num)
