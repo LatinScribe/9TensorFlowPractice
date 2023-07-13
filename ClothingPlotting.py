@@ -32,7 +32,9 @@ def show_many_img(x: int, train_images, class_names, train_labels):
 
 
 def plot_image(i, predictions_array, true_label, img, class_names):
-    """This function shows the image for item i"""
+    """This function shows the prediction graph for item i, with blue bar reperesenting
+    correct prediction and red bar showing incorrect prediction
+    """
     true_label, img = true_label[i], img[i]
     plt.grid(False)
     plt.xticks([])
@@ -53,7 +55,7 @@ def plot_image(i, predictions_array, true_label, img, class_names):
 
 
 def plot_item(i: int, predictions, test_labels, test_images, class_names):
-    """Display both plots for item i"""
+    """Display both the image of the i-th item and the prediction plot"""
     plt.figure(figsize=(6, 3))
     plt.subplot(1, 2, 1)
     plot_image(i, predictions[i], test_labels, test_images, class_names)
@@ -63,7 +65,9 @@ def plot_item(i: int, predictions, test_labels, test_images, class_names):
 
 
 def plot_value_array(i, predictions_array, true_label):
-    """This function plots the confidence in each category for item i"""
+    """This function plots the confidence in each category for item i
+    Correct prediction is plotted in blue, incorrect prediction plotted in red
+    """
     true_label = true_label[i]
     plt.grid(False)
     plt.xticks(range(10))
