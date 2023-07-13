@@ -121,4 +121,6 @@ def plot_item(i: int):
     plot_value_array(i, predictions[i], test_labels)
     plt.show()
 
+
 # example, plot the first item
+plot_item(0)
