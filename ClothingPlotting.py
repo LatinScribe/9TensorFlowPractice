@@ -91,8 +91,8 @@ def plot_many(num_rows: int, num_cols: int, predictions, test_labels, test_image
     plt.show()
 
 
-def plot_single(predictions_single, test_labels, class_names):
+def plot_single(random_num, predictions_single, test_labels, class_names):
     """Given a batch of only one item, plot the prediciton"""
-    plot_value_array(1, predictions_single[0], test_labels)
+    plot_value_array(random_num, predictions_single[0], test_labels)
     _ = plt.xticks(range(10), class_names, rotation=45)
     plt.show()

@@ -9,6 +9,7 @@ To try it out, simply run this file!
 import keras.losses
 import tensorflow as tf
 import numpy as np
+import random
 
 from ClothingPlotting import show_img, show_many_img, plot_item, plot_many, plot_single
 
@@ -77,20 +78,22 @@ plot_many(5, 3, predictions, test_labels, test_images, class_names)
 
 # Finally, let's actually use the trained model!
 # Pick an image from the test dataset
-img = test_images[1]
+random_num = random.randint(0, 9999)
+img = test_images[random_num]
 
-print(img.shape)
+# print(img.shape)
+show_img(random_num, test_images)
 
 # since keras models are optimized on batches, we create a batch with this one item
 img = (np.expand_dims(img, 0))
-print(img.shape)
+# print(img.shape)
 
 # now predict the correct label for this image:
 predictions_single = probability_model.predict(img)
 print(predictions_single)
 
 # plot the predition
-plot_single(predictions_single, test_labels, class_names)
+plot_single(random_num, predictions_single, test_labels, class_names)
 
 # get the actual prediction
 prediction_num = np.argmax(predictions_single[0])
