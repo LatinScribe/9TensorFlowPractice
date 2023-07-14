@@ -14,7 +14,7 @@ import random
 from ClothingPlotting import show_img, show_many_img, plot_item, plot_many, plot_single
 
 
-print(tf.__version__)
+print('TensorFlow version:', tf.__version__)
 
 # practice on the Fashion MNIST
 fashion_mnist = tf.keras.datasets.fashion_mnist
@@ -50,6 +50,7 @@ model.compile(optimizer='adam',
               metrics=['accuracy'])
 
 # train the model!
+print('Training model, please wait...')
 model.fit(train_images, train_labels, epochs=10)
 
 # now to check the accuracy, compare the model to the test dataset
