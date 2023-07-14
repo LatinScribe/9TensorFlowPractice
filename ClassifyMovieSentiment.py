@@ -20,19 +20,27 @@ import random
 from tensorflow.keras import layers
 from tensorflow.keras import losses
 
-DATASET_PATH = 'Imdb_dataset/aclImdb'
-TRAIN_PATH = 'Imdb_dataset/aclImdb/train'
 
 print('TensorFlow version:', tf.__version__)
 
-# Uncomment to download and extract dataset from the web upon first use!!
+# Uncomment to manually download and extract dataset from the web
 # NOT reocmmended to do this each time since it is significantly slower
-# print('Downloading dataset, please wait...')
-# url = "https://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz"
-#
-# dataset = tf.keras.utils.get_file("aclImdb_v1", url, untar=True, cache_dir='.', cache_subdir='')
-# DATASET_PATH = os.path.join(os.path.dirname(dataset), 'aclImdb')
-# TRAIN_PATH = os.path.join(dataset_dir, 'train')
+# print('Downloading dataset, this may take a while, please wait...')
+#     url = "https://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz"
+#     dataset = tf.keras.utils.get_file("aclImdb_v1", url, untar=True, cache_dir='.', cache_subdir='')
+#     DATASET_PATH = os.path.join(os.path.dirname(dataset), 'aclImdb')
+#     TRAIN_PATH = os.path.join(DATASET_PATH, 'train')
+
+if os.path.isdir('aclImdb') and os.path.isdir('aclImdb/train') and os.path.isdir('aclImdb/test'):
+    print("Dataset already downloaded, if issues persist, please manually redownload")
+    DATASET_PATH = 'aclImdb'
+    TRAIN_PATH = 'aclImdb/test'
+else:
+    print('Downloading dataset, this may take a while, please wait...')
+    url = "https://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz"
+    dataset = tf.keras.utils.get_file("aclImdb_v1", url, untar=True, cache_dir='.', cache_subdir='')
+    DATASET_PATH = os.path.join(os.path.dirname(dataset), 'aclImdb')
+    TRAIN_PATH = os.path.join(DATASET_PATH, 'train')
 
 # test a random sample text file to open
 print('The following is a random sample move review from the training dataset:')
