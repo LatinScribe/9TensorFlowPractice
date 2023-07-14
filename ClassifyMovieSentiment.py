@@ -209,6 +209,7 @@ epochs = range(1, len(acc) + 1)
 
 # plot the losses
 # 'bo' stands for blue dot
+plt.figure('Training and validation loss')
 plt.plot(epochs, loss, 'bo', label='Training loss')
 # b is for 'solid blue line'
 plt.plot(epochs, val_loss, 'b', label='Validation loss')
@@ -220,6 +221,7 @@ plt.legend()
 plt.show()
 
 # plot the accuracy
+plt.figure('Training and validation accuracy')
 plt.plot(epochs, acc, 'bo', label='Training acc')
 plt.plot(epochs, val_acc, 'b', label='Validation acc')
 plt.title('Training and validation accuracy')
@@ -228,3 +230,34 @@ plt.ylabel('Accuracy')
 plt.legend(loc='lower right')
 
 plt.show()
+
+# export the model
+# create a new model using the weights already trained
+# for export where the model can process raw strings by
+# including TextVectorization layer inside model
+export_model = tf.keras.Sequential([
+    vectorize_layer,
+    model,
+    layers.Activation('sigmoid')
+])
+
+export_model.compile(
+    loss=losses.BinaryCrossentropy(from_logits=False),
+    optimizer='adam',
+    metrics=['accuracy']
+)
+
+# Test it with 'raw_test_ds', which yields raw strings
+loss, accuracy = export_model.evaluate(raw_test_ds)
+print(accuracy)
+
+# get prediction on new data
+# example reviews
+examples = [
+  "The movie was great!",
+  "The movie was okay.",
+  "The movie was terrible..."
+]
+
+# get prediction on new reviews
+print(export_model.predict(examples))
