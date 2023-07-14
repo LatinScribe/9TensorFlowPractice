@@ -163,3 +163,68 @@ AUTOTUNE = tf.data.AUTOTUNE
 train_ds = train_ds.cache().prefetch(buffer_size=AUTOTUNE)
 val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
 test_ds = test_ds.cache().prefetch(buffer_size=AUTOTUNE)
+
+# Create the model now
+embedding_dim = 16
+
+model = tf.keras.Sequential([
+    layers.Embedding(max_features + 1, embedding_dim),
+    layers.Dropout(0.2),
+    layers.GlobalAveragePooling1D(),
+    layers.Dropout(0.2),
+    layers.Dense(1)
+])
+
+model.summary()
+
+# Loss function and optimizer
+model.compile(loss=losses.BinaryCrossentropy(from_logits=True),
+              optimizer='adam',
+              metrics=tf.metrics.BinaryAccuracy(threshold=0.0)
+              )
+
+# train the model
+epochs = 10
+
+history = model.fit(
+    train_ds,
+    validation_data=val_ds,
+    epochs=epochs)
+
+# check the accuracy
+loss, accuracy = model.evaluate(test_ds)
+
+print('Loss: ', loss)
+print('Accuracy: ', accuracy)
+
+# we can do better - History object contains data of training
+history_dict = history.history
+
+acc = history_dict['binary_accuracy']
+val_acc = history_dict['val_binary_accuracy']
+loss = history_dict['loss']
+val_loss = history_dict['val_loss']
+
+epochs = range(1, len(acc) + 1)
+
+# plot the losses
+# 'bo' stands for blue dot
+plt.plot(epochs, loss, 'bo', label='Training loss')
+# b is for 'solid blue line'
+plt.plot(epochs, val_loss, 'b', label='Validation loss')
+plt.title('Training and validation loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend()
+
+plt.show()
+
+# plot the accuracy
+plt.plot(epochs, acc, 'bo', label='Training acc')
+plt.plot(epochs, val_acc, 'b', label='Validation acc')
+plt.title('Training and validation accuracy')
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.legend(loc='lower right')
+
+plt.show()
