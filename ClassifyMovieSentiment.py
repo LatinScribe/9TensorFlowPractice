@@ -40,7 +40,7 @@ else:
     DATASET_PATH, TRAIN_PATH = get_dataset(URL)
 
 # test a random sample text file to open
-print('The following is a random sample move review from the training dataset:')
+print('The following is a random sample movie review from the training dataset:')
 
 # choose a random file
 rand_first_num = str(random.randint(0, 12499))
