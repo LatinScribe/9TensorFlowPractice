@@ -16,31 +16,28 @@ import shutil
 import string
 import tensorflow as tf
 import random
+from DatasetDownloader import get_dataset
 
 from tensorflow.keras import layers
 from tensorflow.keras import losses
 
+URL = "https://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz"
 
 print('TensorFlow version:', tf.__version__)
 
 # Uncomment to manually download and extract dataset from the web
 # NOT reocmmended to do this each time since it is significantly slower
 # print('Downloading dataset, this may take a while, please wait...')
-#     url = "https://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz"
-#     dataset = tf.keras.utils.get_file("aclImdb_v1", url, untar=True, cache_dir='.', cache_subdir='')
-#     DATASET_PATH = os.path.join(os.path.dirname(dataset), 'aclImdb')
-#     TRAIN_PATH = os.path.join(DATASET_PATH, 'train')
+# DATASET_PATH, TRAIN_PATH = get_dataset(URL)
 
 if os.path.isdir('aclImdb') and os.path.isdir('aclImdb/train') and os.path.isdir('aclImdb/test'):
-    print("Dataset already downloaded, if issues persist, please manually redownload")
+    print("Dataset detected as downloaded, if issues persist, please manually redownload")
     DATASET_PATH = 'aclImdb'
     TRAIN_PATH = 'aclImdb/test'
 else:
+    print('No dataset detected')
     print('Downloading dataset, this may take a while, please wait...')
-    url = "https://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz"
-    dataset = tf.keras.utils.get_file("aclImdb_v1", url, untar=True, cache_dir='.', cache_subdir='')
-    DATASET_PATH = os.path.join(os.path.dirname(dataset), 'aclImdb')
-    TRAIN_PATH = os.path.join(DATASET_PATH, 'train')
+    DATASET_PATH, TRAIN_PATH = get_dataset(URL)
 
 # test a random sample text file to open
 print('The following is a random sample move review from the training dataset:')
