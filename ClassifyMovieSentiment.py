@@ -9,7 +9,6 @@ Classifies movie reviews as positive or negative based on text of review
 (hence binary)
 """
 
-import matplotlib.pyplot as plt
 import os
 import re
 import shutil
@@ -17,6 +16,7 @@ import string
 import tensorflow as tf
 import random
 from DatasetDownloader import get_dataset
+from Plotting import plot_loss, plot_accuracy
 
 from keras import layers
 from keras import losses
@@ -31,17 +31,17 @@ print('TensorFlow version:', tf.__version__)
 # DATASET_PATH, TRAIN_PATH = get_dataset(URL)
 
 if os.path.isdir('aclImdb') and os.path.isdir('aclImdb/train') and os.path.isdir('aclImdb/test'):
-    print('Dataset detected as downloaded, if issues persist, please manually redownload')
+    print('\nDataset detected as downloaded, if issues persist, please manually redownload')
     DATASET_PATH = 'aclImdb'
     TRAIN_PATH = 'aclImdb/train'
     print('Dataset downloaded sucessfully')
 else:
-    print('No dataset detected')
+    print('\nNo dataset detected')
     print('Downloading dataset, this may take a while, please wait...')
     DATASET_PATH, TRAIN_PATH = get_dataset(URL)
 
 # test a random sample text file to open
-print('The following is a random sample movie review from the training dataset:')
+print('\nThe following is a random sample movie review from the training dataset:')
 
 # choose a random file
 rand_first_num = str(random.randint(0, 12499))
@@ -78,6 +78,7 @@ raw_train_ds = tf.keras.utils.text_dataset_from_directory(
 )
 
 # see how the training dataset is now structured
+print('\nThe following shows how our input data has been structured')
 print("Label 0 corresponds to", raw_train_ds.class_names[0])
 print("Label 1 corresponds to", raw_train_ds.class_names[1])
 
@@ -142,6 +143,7 @@ def vectorize_text(text, label):
 # retrieve a batch (of 32 reviews and labels) from the dataset
 text_batch, label_batch = next(iter(raw_train_ds))
 first_review, first_label = text_batch[0], label_batch[0]
+print('\nThe following shows a movie review post processing')
 print("Review", first_review)
 print("Label", raw_train_ds.class_names[first_label])
 print("Vectorized review", vectorize_text(first_review, first_label))
@@ -186,6 +188,7 @@ model.compile(loss=losses.BinaryCrossentropy(from_logits=True),
 # train the model
 epochs = 10
 
+print('\nTraining model, please wait...')
 history = model.fit(
     train_ds,
     validation_data=val_ds,
@@ -207,34 +210,18 @@ val_loss = history_dict['val_loss']
 
 epochs = range(1, len(acc) + 1)
 
+print('\nGenerating plots of training history')
 # plot the losses
-# 'bo' stands for blue dot
-plt.figure('Training and validation loss')
-plt.plot(epochs, loss, 'bo', label='Training loss')
-# b is for 'solid blue line'
-plt.plot(epochs, val_loss, 'b', label='Validation loss')
-plt.title('Training and validation loss')
-plt.xlabel('Epochs')
-plt.ylabel('Loss')
-plt.legend()
-
-plt.show()
+plot_loss(loss, val_loss, epochs)
 
 # plot the accuracy
-plt.figure('Training and validation accuracy')
-plt.plot(epochs, acc, 'bo', label='Training acc')
-plt.plot(epochs, val_acc, 'b', label='Validation acc')
-plt.title('Training and validation accuracy')
-plt.xlabel('Epochs')
-plt.ylabel('Accuracy')
-plt.legend(loc='lower right')
-
-plt.show()
+plot_accuracy(acc, val_acc, epochs)
 
 # export the model
 # create a new model using the weights already trained
 # for export where the model can process raw strings by
 # including TextVectorization layer inside model
+print('\nCreating export model...')
 export_model = tf.keras.Sequential([
     vectorize_layer,
     model,
@@ -249,7 +236,7 @@ export_model.compile(
 
 # Test it with 'raw_test_ds', which yields raw strings
 loss, accuracy = export_model.evaluate(raw_test_ds)
-print(accuracy)
+print('\nExport model accuracy on raw strings: ', accuracy)
 
 # get prediction on new data
 # example reviews
@@ -258,6 +245,7 @@ examples = [
   "The movie was okay.",
   "The movie was terrible..."
 ]
+print('\nSample reviews: ', examples)
 
 # get prediction on new reviews
-print(export_model.predict(examples))
+print('\nAccuracy of trained model on sample reviews: ', export_model.predict(examples))
