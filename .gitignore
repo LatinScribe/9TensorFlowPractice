@@ -5,3 +5,6 @@
 __pycache__/ClothingPlotting.cpython-311.pyc
 .idea/9TensorFlow.iml
 .idea/9TensorFlow.iml
+aclImdb
+aclImdb_v1.tar.gz
+__pycache__/DatasetDownloader.cpython-311.pyc
