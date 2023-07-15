@@ -2,8 +2,7 @@
 Author: Henry "TJ" Chen
 Last modified: July 13, 2023
 
-Functions for plotting images and graphs for the classifying
-clothing neural network
+Functions for plotting images and graphs
 """
 import matplotlib.pyplot as plt
 import numpy as np
