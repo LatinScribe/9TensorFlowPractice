@@ -11,7 +11,7 @@ import tensorflow as tf
 import numpy as np
 import random
 
-from ClothingPlotting import show_img, show_many_img, plot_item, plot_many, plot_single
+from Plotting import show_img, show_many_img, plot_item, plot_many, plot_single
 
 
 print('TensorFlow version:', tf.__version__)

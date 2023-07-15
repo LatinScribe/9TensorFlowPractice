@@ -8,6 +8,10 @@ clothing neural network
 import matplotlib.pyplot as plt
 import numpy as np
 
+################################################################################
+# For Clothing Classifier
+################################################################################
+
 
 def show_img(i: int, train_images):
     """Displays the image of the i-th item in the training dataset"""
@@ -99,4 +103,41 @@ def plot_single(random_num, predictions_single, test_labels, class_names):
     """Given a batch of only one item, plot the prediciton"""
     plot_value_array(random_num, predictions_single[0], test_labels)
     _ = plt.xticks(range(10), class_names, rotation=45)
+    plt.show()
+
+
+################################################################################
+# For Movie Review Classifier
+################################################################################
+def plot_loss(loss, val_loss, epochs):
+    """Plots the training and validation loss against epochs
+    Note: Training loss plotted with blue dots
+          Validation loss plotted with solid blue line
+    """
+    # 'bo' stands for blue dot
+    plt.figure('Training and validation loss')
+    plt.plot(epochs, loss, 'bo', label='Training loss')
+    # b is for 'solid blue line'
+    plt.plot(epochs, val_loss, 'b', label='Validation loss')
+    plt.title('Training and validation loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+
+    plt.show()
+
+
+def plot_accuracy(acc, val_acc, epochs):
+    """Plots the training and validation loss against epochs
+    Note: Training accuracy plotted with blue dots
+          Validation accuracy plotted with solid blue line
+    """
+    plt.figure('Training and validation accuracy')
+    plt.plot(epochs, acc, 'bo', label='Training acc')
+    plt.plot(epochs, val_acc, 'b', label='Validation acc')
+    plt.title('Training and validation accuracy')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.legend(loc='lower right')
+
     plt.show()
