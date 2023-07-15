@@ -6,8 +6,6 @@ __pycache__/ClothingPlotting.cpython-311.pyc
 .idea/9TensorFlow.iml
 .idea/9TensorFlow.iml
 Imdb_dataset/Imdb_dataset/aclImdb/test/neg/10001_1.txt
-*.zip
-*.vocab
 Imdb_dataset/Imdb_dataset/aclImdb/test/neg/10000_4.txt
 Imdb_dataset/Imdb_dataset/aclImdb/imdbEr.txt
 Imdb_dataset/Imdb_dataset/aclImdb/README
@@ -3614,3 +3612,4 @@ aclImdb/train/labeledBow.feat
 aclImdb/test/labeledBow.feat
 aclImdb/README
 __pycache__/DatasetDownloader.cpython-311.pyc
+aclImdb/imdb.vocab
