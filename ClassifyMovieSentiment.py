@@ -15,7 +15,7 @@ import shutil
 import string
 import tensorflow as tf
 import random
-from DatasetDownloader import get_dataset
+from DatasetDownloader import get_dataset_movie
 from Plotting import plot_loss, plot_accuracy
 
 from keras import layers
@@ -38,7 +38,7 @@ if os.path.isdir('aclImdb') and os.path.isdir('aclImdb/train') and os.path.isdir
 else:
     print('\nNo dataset detected')
     print('Downloading dataset, this may take a while, please wait...')
-    DATASET_PATH, TRAIN_PATH = get_dataset(URL)
+    DATASET_PATH, TRAIN_PATH = get_dataset_movie(URL)
 
 # test a random sample text file to open
 print('\nThe following is a random sample movie review from the training dataset:')

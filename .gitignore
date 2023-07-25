@@ -8,3 +8,6 @@ __pycache__/ClothingPlotting.cpython-311.pyc
 aclImdb_v1.tar.gz
 aclImdb
 __pycache__/DatasetDownloader.cpython-311.pyc
+test
+train
+__pycache__/Plotting.cpython-311.pyc
