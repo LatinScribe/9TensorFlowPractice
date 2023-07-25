@@ -1,5 +1,7 @@
 # TensorFlowPractice
- Trying out TensorFlow
+Trying out TensorFlow
+
+Practice problems from tensorflow.org
 
 Practicing tensor flow in preparation to develop my own neural network to score Go games using image recognition
 
