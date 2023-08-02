@@ -42,3 +42,16 @@ b = tf.constant([[1, 1],
 print(tf.add(a, b), "\n")
 print(tf.multiply(a, b), "\n")
 print(tf.matmul(a, b), "\n")
+
+print(a + b, "\n") # element-wise addition
+print(a * b, "\n") # element-wise multiplication
+print(a @ b, "\n") # matrix multiplication
+
+c = tf.constant([[4.0, 5.0], [10.0, 1.0]])
+
+# Find the largest value
+print(tf.reduce_max(c))
+# Find the index of the largest value
+print(tf.math.argmax(c))
+# Compute the softmax
+print(tf.nn.softmax(c))
