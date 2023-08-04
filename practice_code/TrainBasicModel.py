@@ -95,7 +95,7 @@ print("\n")
 plt.plot(range(epochs), losses)
 plt.xlabel("Epoch")
 plt.ylabel("Mean Squared Error (MSE)")
-plt.title('MSE loss vs training iterations');
+plt.title('MSE loss vs training iterations')
 
 # observe the model performance after training
 plot_preds(x, y, f, quad_model, 'After training')
