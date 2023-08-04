@@ -1,12 +1,12 @@
 """
 Author: Henry "TJ" Chen
-Last modified: July 13, 2023
+Last modified: July 24, 2023
 
-This will demonstrate text classification. It trains a binary classifier to
-perform sentiment analysis on an IMDB dataset.
+This will demonstrate text classification. It trains a multi-class clasifier
+to predict the tag of a stack overflow question
 
-Classifies movie reviews as positive or negative based on text of review
-(hence binary)
+Classifies stack overflow questions based on whether they are
+Python, Java, CSharp, or JavaScript
 """
 
 import os
@@ -15,62 +15,66 @@ import shutil
 import string
 import tensorflow as tf
 import random
-from DatasetDownloader import get_dataset_movie
+from DatasetDownloader import get_dataset
 from Plotting import plot_loss, plot_accuracy
 
 from keras import layers
 from keras import losses
 
-URL = "https://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz"
+URL = "https://storage.googleapis.com/download.tensorflow.org/data/stack_overflow_16k.tar.gz"
+TAGS = ['Python', 'Java', 'Csharp', 'JavaScript']
 
 print('TensorFlow version:', tf.__version__)
 
 # Uncomment to manually download and extract dataset from the web
 # NOT reocmmended to do this each time since it is significantly slower
 # print('Downloading dataset, this may take a while, please wait...')
-# DATASET_PATH, TRAIN_PATH = get_dataset(URL)
+# DATASET_PATH, TRAIN_PATH, TEST_PATH = get_dataset(URL, 'stack_overflow_16k')
+# print('Dataset downloaded sucessfully')
+# print('Dataset-path: ', DATASET_PATH)
+# print('Train-path: ', TRAIN_PATH)
+# print('Test-path: ', TEST_PATH)
 
-if os.path.isdir('aclImdb') and os.path.isdir('aclImdb/train') and os.path.isdir('aclImdb/test'):
+if os.path.isdir('train') and os.path.isdir('test'):
     print('\nDataset detected as downloaded, if issues persist, please manually redownload')
-    DATASET_PATH = 'aclImdb'
-    TRAIN_PATH = 'aclImdb/train'
-    print('Dataset downloaded sucessfully')
+    TRAIN_PATH = 'train'
+    TEST_PATH = 'test'
 else:
     print('\nNo dataset detected')
     print('Downloading dataset, this may take a while, please wait...')
-    DATASET_PATH, TRAIN_PATH = get_dataset_movie(URL)
+    DATASET_PATH, TRAIN_PATH, TEST_PATH = get_dataset(URL, 'stack_overflow_16k')
+    print('Dataset downloaded sucessfully')
+    print('Dataset-path: ', DATASET_PATH)
+    print('Train-path: ', TRAIN_PATH)
+    print('Test-path: ', TEST_PATH)
 
 # test a random sample text file to open
-print('\nThe following is a random sample movie review from the training dataset:')
+print('\nThe following is a random sample stackoverflow post from the training dataset:')
 
 # choose a random file
-rand_first_num = str(random.randint(0, 12499))
-rand_secd_num = str(random.randint(7, 10))
+rand_first_num = str(random.randint(0, 1999))
+rand_type = random.choice(TAGS)
+rand_tag = rand_type.lower()
 
-sample_file = os.path.join(TRAIN_PATH, 'pos/' + rand_first_num + '_' + rand_secd_num + '.txt')
+sample_file = os.path.join(TRAIN_PATH, rand_tag + '\\' + rand_tag + rand_first_num + '.txt')
+
 while not os.path.isfile(sample_file):
-    rand_first_num = str(random.randint(0, 12499))
-    rand_secd_num = str(random.randint(7, 10))
+    rand_first_num = str(random.randint(0, 1999))
+    rand_type = random.choice(TAGS)
+    rand_tag = rand_type.lower()
 
-    sample_file = os.path.join(TRAIN_PATH, 'pos/' + rand_first_num + '_' + rand_secd_num + '.txt')
+    sample_file = os.path.join(TRAIN_PATH, rand_tag + '\\' + rand_first_num + '.txt')
 
 # open and print the chosen file
 with open(sample_file) as f:
     print(f.read())
-
-# remove unnesscary folders
-remove_dir = os.path.join(TRAIN_PATH, 'unsup')
-if os.path.isdir(remove_dir):
-    print('Unesscary dataset folders detected, removing folders...')
-    shutil.rmtree(remove_dir)
-    print('Removal sucessfully completed')
 
 # Need to create a validation dataset, create one using 80:20 split
 batch_size = 32
 seed = 42
 
 raw_train_ds = tf.keras.utils.text_dataset_from_directory(
-    'aclImdb/train',
+    TRAIN_PATH,
     batch_size=batch_size,
     validation_split=0.2,
     subset='training',
@@ -88,7 +92,7 @@ for text_batch, label_batch in raw_train_ds.take(1):
         print("Label", label_batch.numpy()[i])
 
 raw_val_ds = tf.keras.utils.text_dataset_from_directory(
-    'aclImdb/train',
+    TRAIN_PATH,
     batch_size=batch_size,
     validation_split=0.2,
     subset='validation',
@@ -96,7 +100,7 @@ raw_val_ds = tf.keras.utils.text_dataset_from_directory(
 )
 
 raw_test_ds = tf.keras.utils.text_dataset_from_directory(
-    'aclImdb/test',
+    TEST_PATH,
     batch_size=batch_size)
 
 
@@ -174,15 +178,15 @@ model = tf.keras.Sequential([
     layers.Dropout(0.2),
     layers.GlobalAveragePooling1D(),
     layers.Dropout(0.2),
-    layers.Dense(1)
+    layers.Dense(4)
 ])
 
 model.summary()
 
 # Loss function and optimizer
-model.compile(loss=losses.BinaryCrossentropy(from_logits=True),
+model.compile(loss=tf.losses.SparseCategoricalCrossentropy(from_logits=True),
               optimizer='adam',
-              metrics=tf.metrics.BinaryAccuracy(threshold=0.0)
+              metrics=['accuracy']
               )
 
 # train the model
@@ -203,8 +207,8 @@ print('Accuracy: ', accuracy)
 # we can do better - History object contains data of training
 history_dict = history.history
 
-acc = history_dict['binary_accuracy']
-val_acc = history_dict['val_binary_accuracy']
+acc = history_dict['accuracy']
+val_acc = history_dict['val_accuracy']
 loss = history_dict['loss']
 val_loss = history_dict['val_loss']
 
@@ -229,7 +233,7 @@ export_model = tf.keras.Sequential([
 ])
 
 export_model.compile(
-    loss=losses.BinaryCrossentropy(from_logits=False),
+    loss=tf.losses.SparseCategoricalCrossentropy(from_logits=True),
     optimizer='adam',
     metrics=['accuracy']
 )
