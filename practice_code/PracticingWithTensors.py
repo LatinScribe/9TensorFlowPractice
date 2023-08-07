@@ -215,3 +215,171 @@ t16 = tf.tensor_scatter_nd_max(t14,
                                indices=[[0, 2], [1, 1], [2, 0], [1, 2]],
                                updates=[6, 5, 4, 2])
 print(t16)
+
+
+# ------------- SAHPES --------------
+
+# Shape returns a `TensorShape` object that shows the size along each axis
+x = tf.constant([[1], [2], [3]])
+print(x.shape)
+
+# You can convert this object into a Python list, too
+print(x.shape.as_list())
+
+# using the tf.reshape operation is fast and cheap as the underlying data does not need to be duplicated
+# You can reshape a tensor to a new shape.
+# Note that you're passing in a list
+reshaped = tf.reshape(x, [1, 3])
+
+print(x.shape)
+print(reshaped.shape)
+
+# A `-1` passed in the `shape` argument says "Whatever fits".
+print(tf.reshape(rank_3_tensor, [-1]))
+
+# For this 3x2x5 tensor, reshaping to (3x2)x5 or 3x(2x5) are both reasonable things to do, as the slices do not mix:
+print(tf.reshape(rank_3_tensor, [3*2, 5]), "\n")
+print(tf.reshape(rank_3_tensor, [3, -1]))
+
+# Reshaping will "work" for any new shape with the same total number of elements, but it will not do anything useful
+# if you do not respect the order of the axes.
+
+# Swapping axes in tf.reshape does not work; you need tf.transpose for that.
+
+# BAD examples: don't do this
+
+# You can't reorder axes with reshape.
+print(tf.reshape(rank_3_tensor, [2, 3, 5]), "\n")
+
+# This is a mess
+print(tf.reshape(rank_3_tensor, [5, 6]), "\n")
+
+# This doesn't work at all
+try:
+    tf.reshape(rank_3_tensor, [7, -1])
+except Exception as e:
+    print(f"{type(e).__name__}: {e}")
+
+
+# ----- casting DTypes -----
+the_f64_tensor = tf.constant([2.2, 3.6, 4.4], dtype=tf.float64)
+print(the_f64_tensor)
+the_f16_tensor = tf.cast(the_f64_tensor, dtype=tf.float16)
+print(the_f16_tensor)
+# Now, cast to an uint8 and lose the decimal precision
+the_u8_tensor = tf.cast(the_f16_tensor, dtype=tf.uint8)
+print(the_u8_tensor)
+
+# ------ broadcasting -----
+
+# under certain conditions, smaller tensors are "stretched" automatically to fit larger tensors when running
+# combined operations on them
+
+# example - multiply or adding tensor to a scalar
+x = tf.constant([1, 2, 3])
+
+y = tf.constant(2)
+z = tf.constant([2, 2, 2])
+# All of these are the same computation
+print(tf.multiply(x, 2))
+print(x * y)
+print(x * z)
+
+# These are the same computations
+x = tf.reshape(x,[3,1])
+y = tf.range(1, 5)
+print(x, "\n")
+print(y, "\n")
+print(tf.multiply(x, y))
+
+# same operation without broadcasting
+x_stretch = tf.constant([[1, 1, 1, 1],
+                         [2, 2, 2, 2],
+                         [3, 3, 3, 3]])
+
+y_stretch = tf.constant([[1, 2, 3, 4],
+                         [1, 2, 3, 4],
+                         [1, 2, 3, 4]])
+
+print(x_stretch * y_stretch)  # Again, operator overloading
+
+# explicit broadcasting
+print(tf.broadcast_to(tf.constant([1, 2, 3]), [3, 3]))
+
+# ----------- Ragged Tensors --------
+
+# A tensor with variable numbers of elements along some axis is called "ragged"
+
+ragged_list = [
+    [0, 1, 2, 3],
+    [4, 5],
+    [6, 7, 8],
+    [9]]
+
+# This doesn't work
+try:
+    tensor = tf.constant(ragged_list)
+except Exception as e:
+    print(f"{type(e).__name__}: {e}")
+
+# this instead
+ragged_tensor = tf.ragged.constant(ragged_list)
+print(ragged_tensor)
+
+# note the shape has axis of unkown lengths
+print(ragged_tensor.shape)
+
+# -------- Striing Tensors -------
+
+# Tensors can be strings, here is a scalar string.
+scalar_string_tensor = tf.constant("Grey wolf")
+print(scalar_string_tensor)
+
+# If you have three string tensors of different lengths, this is OK.
+tensor_of_strings = tf.constant(["Gray wolf",
+                                 "Quick brown fox",
+                                 "Lazy dog"])
+# Note that the shape is (3,). The string length is not included.
+print(tensor_of_strings)
+
+# unicode characters
+tf.constant("🥳👍")
+
+# You can use split to split a string into a set of tensors
+print(tf.strings.split(scalar_string_tensor, sep=" "))
+
+# ...but it turns into a `RaggedTensor` if you split up a tensor of strings,
+# as each string might be split into a different number of parts.
+print(tf.strings.split(tensor_of_strings))
+
+text = tf.constant("1 10 100")
+print(tf.strings.to_number(tf.strings.split(text, " ")))
+
+# Although you can't use tf.cast to turn a string tensor into numbers, you can convert it into bytes,
+# and then into numbers.
+byte_strings = tf.strings.bytes_split(tf.constant("Duck"))
+byte_ints = tf.io.decode_raw(tf.constant("Duck"), tf.uint8)
+print("Byte strings:", byte_strings)
+print("Bytes:", byte_ints)
+
+# Or split it up as unicode and then decode it
+unicode_bytes = tf.constant("アヒル 🦆")
+unicode_char_bytes = tf.strings.unicode_split(unicode_bytes, "UTF-8")
+unicode_values = tf.strings.unicode_decode(unicode_bytes, "UTF-8")
+
+print("\nUnicode bytes:", unicode_bytes)
+print("\nUnicode chars:", unicode_char_bytes)
+print("\nUnicode values:", unicode_values)
+
+# ----- Sparse Tensors -------
+# Sometimes, your data is sparse, like a very wide embedding space. TensorFlow supports tf.sparse.SparseTensor and
+# related operations to store sparse data efficiently.
+
+# Sparse tensors store values by index in a memory-efficient manner
+sparse_tensor = tf.sparse.SparseTensor(indices=[[0, 0], [1, 2]],
+                                       values=[1, 2],
+                                       dense_shape=[3, 4])
+print(sparse_tensor, "\n")
+
+# You can convert sparse tensors to dense
+print(tf.sparse.to_dense(sparse_tensor))
