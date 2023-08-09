@@ -35,7 +35,7 @@ print('TensorFlow version:', tf.__version__)
 # print('Train-path: ', TRAIN_PATH)
 # print('Test-path: ', TEST_PATH)
 
-if os.path.isdir('train') and os.path.isdir('test'):
+if os.path.isdir('stack_overflow_dataset/train') and os.path.isdir('stack_overflow_dataset/test'):
     print('\nDataset detected as downloaded, if issues persist, please manually redownload')
     TRAIN_PATH = 'train'
     TEST_PATH = 'test'

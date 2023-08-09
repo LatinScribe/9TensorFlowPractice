@@ -9,8 +9,6 @@ __pycache__/ClothingPlotting.cpython-311.pyc
 aclImdb_v1.tar.gz
 aclImdb
 __pycache__/DatasetDownloader.cpython-311.pyc
-test
-train
 __pycache__/Plotting.cpython-311.pyc
 my_new_model
 demo_saved
@@ -21,3 +19,7 @@ dnn_model/fingerprint.pb
 dnn_model/keras_metadata.pb
 dnn_model/saved_model.pb
 dnn_model/variables/variables.data-00000-of-00001
+stack_overflow_16k.tar.gz
+stack_overflow_dataset/README.md
+stack_overflow_dataset/train
+stack_overflow_dataset/test

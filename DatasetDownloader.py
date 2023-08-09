@@ -23,7 +23,7 @@ def get_dataset(url: str, file_name: str) -> tuple[str, str, str]:
 
     Returns the directory path of dataset, train_folder, and test_folder
     """
-    dataset = tf.keras.utils.get_file(file_name, url, untar=True, cache_dir='.', cache_subdir='')
+    dataset = tf.keras.utils.get_file(file_name, url, untar=True, cache_dir='stack_overflow_dataset', cache_subdir='')
     dataset_path = os.path.dirname(dataset)
     train_path = os.path.join(dataset_path, 'train')
     test_path = os.path.join(dataset_path, 'test')
