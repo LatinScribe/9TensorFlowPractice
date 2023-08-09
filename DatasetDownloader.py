@@ -19,7 +19,8 @@ def get_dataset_movie(url: str) -> tuple[str, str]:
 
 def get_dataset(url: str, file_name: str, save_dir: str) -> tuple[str, str, str]:
     """Downloads and extracts the dataset from the given source URL
-    Saves the file with the given file name
+    Saves the file with the given file name into the given save directory
+    ASSUMES there is a 'train' folder and 'test' folder
 
     Returns the directory path of dataset, train_folder, and test_folder
     """
