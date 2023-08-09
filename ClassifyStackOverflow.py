@@ -11,7 +11,7 @@ Python, Java, CSharp, or JavaScript
 
 import os
 import re
-import shutil
+# import shutil
 import string
 import tensorflow as tf
 import random
@@ -19,7 +19,7 @@ from DatasetDownloader import get_dataset
 from Plotting import plot_loss, plot_accuracy
 
 from keras import layers
-from keras import losses
+# from keras import losses
 
 URL = "https://storage.googleapis.com/download.tensorflow.org/data/stack_overflow_16k.tar.gz"
 TAGS = ['Python', 'Java', 'Csharp', 'JavaScript']
@@ -37,12 +37,12 @@ print('TensorFlow version:', tf.__version__)
 
 if os.path.isdir('stack_overflow_dataset/train') and os.path.isdir('stack_overflow_dataset/test'):
     print('\nDataset detected as downloaded, if issues persist, please manually redownload')
-    TRAIN_PATH = 'train'
-    TEST_PATH = 'test'
+    TRAIN_PATH = 'stack_overflow_dataset/train'
+    TEST_PATH = 'stack_overflow_dataset/test'
 else:
     print('\nNo dataset detected')
     print('Downloading dataset, this may take a while, please wait...')
-    DATASET_PATH, TRAIN_PATH, TEST_PATH = get_dataset(URL, 'stack_overflow_16k')
+    DATASET_PATH, TRAIN_PATH, TEST_PATH = get_dataset(URL, 'stack_overflow_16k', 'stack_overflow_dataset')
     print('Dataset downloaded sucessfully')
     print('Dataset-path: ', DATASET_PATH)
     print('Train-path: ', TRAIN_PATH)
