@@ -16,3 +16,8 @@ my_new_model
 demo_saved
 .idea/.name
 __pycache__/Plotting.cpython-39.pyc
+dnn_model/variables/variables.index
+dnn_model/fingerprint.pb
+dnn_model/keras_metadata.pb
+dnn_model/saved_model.pb
+dnn_model/variables/variables.data-00000-of-00001
