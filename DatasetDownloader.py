@@ -17,13 +17,14 @@ def get_dataset_movie(url: str) -> tuple[str, str]:
     return (dataset_path, train_path)
 
 
-def get_dataset(url: str, file_name: str) -> tuple[str, str, str]:
+def get_dataset(url: str, file_name: str, save_dir: str) -> tuple[str, str, str]:
     """Downloads and extracts the dataset from the given source URL
-    Saves the file with the given file name
+    Saves the file with the given file name into the given save directory
+    ASSUMES there is a 'train' folder and 'test' folder
 
     Returns the directory path of dataset, train_folder, and test_folder
     """
-    dataset = tf.keras.utils.get_file(file_name, url, untar=True, cache_dir='stack_overflow_dataset', cache_subdir='')
+    dataset = tf.keras.utils.get_file(file_name, url, untar=True, cache_dir=save_dir, cache_subdir='')
     dataset_path = os.path.dirname(dataset)
     train_path = os.path.join(dataset_path, 'train')
     test_path = os.path.join(dataset_path, 'test')
