@@ -1,10 +1,9 @@
-"""
+"""Practicing with Tensors in TensorFlow
+
 Author: Henry "TJ" Chen
 Last Modified: July 7, 2023
 
-File for practicing with tensors
-
-Following the Google Guide
+Based off guide by Google: https://www.tensorflow.org
 """
 import tensorflow as tf
 import numpy as np

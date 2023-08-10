@@ -2,6 +2,9 @@
 
 This file contains practice code
 
+Author: Henry "TJ" Chen
+Last Modified: August 9, 2023
+
 Based off guide by Google: https://www.tensorflow.org
 """
 import tensorflow as tf
