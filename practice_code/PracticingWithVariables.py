@@ -1,4 +1,4 @@
-"""Practicing With Variables in Tensorflow
+"""Practicing with Variables in Tensorflow
 
 This file contains practice code
 
